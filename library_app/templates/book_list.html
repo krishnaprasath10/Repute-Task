@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Book List</title>
+</head>
+<body>
+<h1>Book List</h1>
+
+{% if user.is_authenticated %}
+    <p>Welcome, {{ user.username }} | <a href="{% url 'add_book' %}">Add Book</a> | 
+       <a href="{% url 'logout_view' %}">Logout</a></p>
+{% else %}
+    <p><a href="{% url 'login_view' %}">Login</a> | <a href="{% url 'signup_view' %}">Sign Up</a></p>
+{% endif %}
+
+{% if messages %}
+    {% for message in messages %}
+        <p style="color:red;">{{ message }}</p>
+    {% endfor %}
+{% endif %}
+
+<table border="1" cellpadding="5">
+    <tr>
+        <th>Title</th>
+        <th>Author</th>
+        <th>Published Date</th>
+        <th>ISBN</th>
+        {% if user.is_authenticated %}
+        <th>Actions</th>
+        {% endif %}
+    </tr>
+    {% for book in books %}
+    <tr>
+        <td>{{ book.title }}</td>
+        <td>{{ book.author }}</td>
+        <td>{{ book.published_date }}</td>
+        <td>{{ book.isbn }}</td>
+        {% if user == book.created_by %}
+        <td>
+            <a href="{% url 'edit_book' book.pk %}">Edit</a> |
+            <a href="{% url 'delete_book' book.pk %}">Delete</a>
+        </td>
+        {% endif %}
+    </tr>
+    {% endfor %}
+</table>
+</body>
+</html>
